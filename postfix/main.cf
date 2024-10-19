@@ -1,0 +1,87 @@
+# ========================================================
+# 1. Basic Configuration
+# ========================================================
+
+myhostname = mail.michaelvu.dev
+mydomain = michaelvu.dev
+myorigin = $mydomain
+
+# Specify where the mail server will accept email for local delivery
+mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain
+
+# ========================================================
+# 2. Network and Relay Settings
+# ========================================================
+
+# Relay settings to use Amazon SES SMTP endpoint (for outgoing mail)
+relayhost = 
+
+# Listen on all network interfaces
+inet_interfaces = all
+inet_protocols = ipv4
+
+# ========================================================
+# 3. Mailbox and Delivery Settings
+# ========================================================
+
+home_mailbox = Maildir/
+
+# ========================================================
+# 4. TLS and Security Settings
+# ========================================================
+
+# Enable TLS for outgoing mail (to Amazon SES)
+smtp_tls_security_level = may
+smtp_tls_note_starttls_offer = yes
+# Enable TLS for incoming mail
+smtpd_tls_security_level = may
+
+# ========================================================
+# 5. Authentication Settings (For Amazon SES SMTP Relay)
+# ========================================================
+
+smtp_sasl_auth_enable = yes
+
+# Path to your SASL password file, which will store your SES credentials
+smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
+
+# Prevent anonymous authentication
+smtp_sasl_security_options = noanonymous
+
+# ========================================================
+# 6. Service and Security Restrictions
+# ========================================================
+
+# Restrict relay for authorized destinations (permit local networks only)
+smtpd_relay_restrictions = 
+    permit_mynetworks,
+    reject_unauth_destination,
+    permit
+
+# Restrict recipient addresses to local or allowed destinations
+smtpd_recipient_restrictions = 
+    permit_mynetworks,
+    reject_unauth_destination,
+    permit
+
+# Allow mail from local network or localhost (127.0.0.0/8 and IPv6 localhost)
+mynetworks = 127.0.0.0/8, [::1]/128
+
+# Optional: Reject mail from unknown clients
+smtpd_client_restrictions = reject_unknown_client
+
+# ========================================================
+# 7. Debugging and Logging
+# ========================================================
+
+# Enable debugging for easier troubleshooting
+debug_peer_level = 2
+
+# Specify the location of mail logs
+maillog_file = /var/log/mail.log
+
+# ========================================================
+# 8. Local Recipient Restrictions
+# ========================================================
+
+local_recipient_maps = 
